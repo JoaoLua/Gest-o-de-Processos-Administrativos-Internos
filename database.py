@@ -4,15 +4,29 @@ import sqlite3
 def conectar():
     return sqlite3.connect("banco.db")
 
-def criar_tabela():
-    conn = conectar()
-    cursor = conn.cursor()
+conn = conectar()
+cursor = conn.cursor()
+
+def criar_tabela_usuarios():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             senha TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+def criar_tabela_processos():
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTIS processos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            assunto TEXT NOT NULL,
+            setor_responsavel TEXT NOT NULL,
+            status TEXT NOT NULL,
+            descrição TEXT NOT NULL
         )
     """)
     conn.commit()
