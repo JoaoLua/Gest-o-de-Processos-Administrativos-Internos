@@ -1,24 +1,21 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from database import get_all_processos
+from verificacoes.gestao import get_all_processos
 
 class JanelaRelatorios:
     def __init__(self, root_toplevel):
-        self.root = root_toplevel # 'root_toplevel' é a janela Toplevel passada
-        self.root.title("Relatório de Processos") # Pode definir o título aqui também
-        self.root.geometry("800x600") # E a geometria, se preferir
+        self.root = root_toplevel
+        self.root.title("Relatório de Processos")
+        self.root.geometry("800x600") 
 
-        # Frame principal para a lista de relatórios
         frame_principal_relatorio = ttk.LabelFrame(self.root, text="Detalhes dos Processos")
         frame_principal_relatorio.pack(padx=10, pady=10, fill="both", expand=True)
 
-        # Definindo as colunas para o TreeView do relatório
         cols = ("id_processo", "numero_processo", "assunto", "data_criacao",
                 "setor_responsavel", "status", "descricao_detalhada")
         self.tree_relatorio = ttk.Treeview(frame_principal_relatorio, columns=cols, show="headings")
 
-        # Configurando os cabeçalhos e largura das colunas
         self.tree_relatorio.heading("id_processo", text="ID")
         self.tree_relatorio.column("id_processo", width=40, anchor="center", stretch=tk.NO)
 
@@ -40,7 +37,6 @@ class JanelaRelatorios:
         self.tree_relatorio.heading("descricao_detalhada", text="Descrição Detalhada")
         self.tree_relatorio.column("descricao_detalhada", width=250, anchor="w")
 
-        # Adicionando Scrollbars
         scrollbar_y = ttk.Scrollbar(frame_principal_relatorio, orient="vertical", command=self.tree_relatorio.yview)
         scrollbar_x = ttk.Scrollbar(frame_principal_relatorio, orient="horizontal", command=self.tree_relatorio.xview)
         self.tree_relatorio.configure(yscrollcommand=scrollbar_y.set, xscrollcommand=scrollbar_x.set)
@@ -57,18 +53,17 @@ class JanelaRelatorios:
         self.carregar_dados_no_relatorio()
 
     def carregar_dados_no_relatorio(self):
-        """Busca todos os processos do banco e os exibe na TreeView do relatório."""
         for i in self.tree_relatorio.get_children():
             self.tree_relatorio.delete(i)
 
         try:
-            processos = get_all_processos() # Certifique-se que esta função existe em database.py
+            processos = get_all_processos()
             if processos:
                 for proc in processos:
                     self.tree_relatorio.insert("", tk.END, values=proc)
             else:
                 messagebox.showinfo("Relatório Vazio", "Não há processos cadastrados para exibir.", parent=self.root)
-        except AttributeError: # Especificamente para o caso da função não existir no módulo database
+        except AttributeError: 
             messagebox.showerror("Erro de Função BD",
                                  "A função 'get_all_processos_completos_db' não está definida em 'database.py'.",
                                  parent=self.root)

@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from database import inicializar_banco, add_processo, get_all_processos, get_processo_by_id, update_processo, delete_processo
-from app_relatorios import JanelaRelatorios
+from banco.database import inicializar_banco
+from verificacoes.gestao import add_processo, get_all_processos, get_processo_by_id, update_processo, delete_processo
+from gui.app_relatorios import JanelaRelatorios
 
 class JanelaGestao:
     def __init__(self, root):
@@ -228,7 +229,6 @@ class JanelaGestao:
 
 
 if __name__ == "__main__":
-    inicializar_banco()
     root = tk.Tk()
     app = JanelaGestao(root)
     root.mainloop()

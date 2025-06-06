@@ -1,0 +1,1 @@
+from .database import inicializar_banco

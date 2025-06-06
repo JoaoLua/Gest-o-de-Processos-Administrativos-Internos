@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
-from database import inicializar_banco, cadastrar_usuario, verificar_login
-from app_gestao import JanelaGestao
+from banco.database import inicializar_banco
+from gui.app_gestao import JanelaGestao
+from verificacoes.login import cadastrar_usuario, verificar_login
 
 class Login_cadastro:
     def __init__(self, root):

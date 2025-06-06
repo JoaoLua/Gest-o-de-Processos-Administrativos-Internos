@@ -1,66 +1,5 @@
+from banco.database import conectar
 import sqlite3
-
-def conectar():
-    return sqlite3.connect("banco.db")
-
-def criar_tabela_usuarios(): #regitro tabela usuarios
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            senha TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
-
-def criar_tabela_processos():  # registro tabela processos
-    try:
-        conn = conectar()
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS processos (
-                id_processo INTEGER PRIMARY KEY AUTOINCREMENT,
-                numero_processo TEXT UNIQUE NOT NULL,
-                assunto TEXT NOT NULL,
-                data_criacao TEXT,
-                setor_responsavel TEXT,
-                status TEXT,
-                descricao_detalhada TEXT
-            )
-        """)
-        conn.commit()
-        conn.close()
-        return True
-    except sqlite3.IntegrityError:
-        return False
-
-
-
-#Operações login e cadastro
-def cadastrar_usuario(nome, email, senha):
-    try:
-        conn = conectar()
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)", (nome, email, senha))
-        conn.commit()
-        conn.close()
-        return True
-    except sqlite3.IntegrityError:
-        return False  # Email já cadastrado
-
-def verificar_login(email, senha):
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM usuarios WHERE email = ? AND senha = ?", (email, senha))
-    usuario = cursor.fetchone()
-    conn.close()
-    return usuario
-
-# processos crud
 
 def add_processo(numero_processo, assunto, data_criacao, setor_responsavel, status, descricao_detalhada):
     try:
@@ -84,7 +23,6 @@ def add_processo(numero_processo, assunto, data_criacao, setor_responsavel, stat
         return False
 
 def get_all_processos():
-    """Busca todos os processos do banco de dados."""
     conn = conectar()
     cursor = conn.cursor()
     try:
@@ -99,7 +37,6 @@ def get_all_processos():
         conn.close()
 
 def get_processo_by_id(id_processo):
-    """Busca um processo específico pelo seu ID, incluindo todos os campos."""
     conn = conectar()
     cursor = conn.cursor()
     try:
@@ -113,7 +50,6 @@ def get_processo_by_id(id_processo):
         conn.close()
 
 def update_processo(id_processo, numero_processo, assunto, data_criacao, setor_responsavel, status, descricao_detalhada):
-    """Atualiza um processo existente no banco de dados."""
     conn = conectar()
     cursor = conn.cursor()
     try:
@@ -143,7 +79,6 @@ def update_processo(id_processo, numero_processo, assunto, data_criacao, setor_r
         conn.close()
 
 def delete_processo(id_processo):
-    """Deleta um processo do banco de dados pelo seu ID."""
     conn = conectar()
     cursor = conn.cursor()
     try:
@@ -159,7 +94,3 @@ def delete_processo(id_processo):
         return False
     finally:
         conn.close()
-
-def inicializar_banco():
-    criar_tabela_usuarios()
-    criar_tabela_processos()
